@@ -4,5 +4,6 @@ export default {
   '/new': 'News',
   '/info': 'Infos',
   '/etc': 'Etcs',
-  '/chatroom': 'Chatrooms'
+  '/chatroom': 'Chatrooms',
+  '/profile/:userName': 'Profiles'
 }

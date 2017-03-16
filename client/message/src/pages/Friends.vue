@@ -7,7 +7,7 @@
       <div class="boundary" v-if="titleShowStatus">내 프로필</div>
 
       <div id="my_profile" v-if="titleShowStatus">
-        <v-item v-bind:click="getProfile" v-bind:info="myProfile" v-bind:isLine="false"></v-item>
+        <v-item v-bind:click="getProfile" v-bind:href="myProfile.href" v-bind:info="myProfile" v-bind:isLine="false"></v-item>
       </div>
 
       <div class="boundary" v-if="titleShowStatus">추천친구</div>
@@ -25,30 +25,37 @@
       <div class="boundary">친구</div>
 
       <div id="friends">
-        <v-item v-bind:click="getProfile" v-for="friend in friends" v-if="friend.showStatus" v-bind:info="friend" v-bind:isLine="true" class="friendList"></v-item>
+        <v-item v-bind:click="getProfile" v-bind:href="friend.href" v-for="friend in friends" v-if="friend.showStatus" v-bind:info="friend" v-bind:isLine="true" class="friendList"></v-item>
       </div>
     </main-layout>
+
 </template>
 
 <script>
   import MainLayout from '../layouts/Main.vue'
   import VItem from '../components/VItem.vue'
+  import PProfile from './Profiles.vue'
 
   export default {
     components: {
       MainLayout,
-      VItem
+      VItem,
+      PProfile
     },
     data () {
       return {
+        currentView: 'main-layout', // p-profile
         text: '친구',
 
+        userName: 'mung',
+        prifilePath: '/profile/' + this.userName,
         titleShowStatus: true,
 
         myProfile: {
           src: 'http://imvely.com/web/product/medium/201612/11761_shop1_804401.gif',
-          name: 'myProfile',
-          content: 'myProfile content'
+          name: 'mung',
+          content: 'myProfile content',
+          href: '/profile/mung'
         },
         recommendFriends: [{
           src: 'http://www.stylenanda.com/web/product/small/201703/218538_shop1_311819.gif',
@@ -77,12 +84,14 @@
             src: 'http://www.stylenanda.com/web/product/small/201703/219291_shop1_782337.jpg',
             name: 'friends1',
             content: 'friends1 content',
-            showStatus: true
+            showStatus: true,
+            href: '/profile/friends1'
           }, {
             src: 'http://www.stylenanda.com/2017/upload1/170224kej_4_11.jpg',
             name: 'friends2',
             content: 'friends2 content',
-            showStatus: true
+            showStatus: true,
+            href: '/profile/friends2'
           }
         ]
 
@@ -90,7 +99,7 @@
     },
     methods: {
       getProfile (e) {
-        console.log(e.target)
+        this.currentView = 'p-profile'
       },
       other () {
         alert('other')
@@ -111,6 +120,9 @@
             }
           })
         }
+      },
+      render (h) {
+        return h(this.ViewComponent)
       }
     },
     created () {
