@@ -1,0 +1,6 @@
+.DS_Store
+.idea/
+npm-debug.log
+client/message/node_modules
+server/node_modules
+*.swp
