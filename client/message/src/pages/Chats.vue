@@ -1,6 +1,6 @@
 <template>
   <main-layout v-bind:text="text">
-    <v-item v-for="chat in chats" v-bind:info="chat" class="chatList" v-bind:isLine="true"></v-item>
+    <v-item v-for="chat in chats" v-bind:href="chat.href" v-bind:info="chat" class="chatList" v-bind:isLine="true"></v-item>
   </main-layout>
 </template>
 
@@ -21,7 +21,7 @@
       }
     },
     methods: {
-      getChats (data) {
+      chatInitionalize (data) {
         this.chats = data
       }
     },
@@ -31,8 +31,10 @@
 
       fetch('http://127.0.0.1:3000/test/data').then(function (response) {
         return response.json().then(function (data) {
-          console.log(data['testData'])
-          self.getChats(data['testData'])
+          data['testData'].map(function (item) {
+            item['href'] = '/chatroom'
+          })
+          self.chatInitionalize(data['testData'])
         })
       })
     }
