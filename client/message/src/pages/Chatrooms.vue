@@ -16,9 +16,15 @@
       messagebox
     },
     methods: {
+      scrollDown () {
+        window.scrollTo(0, document.body.scrollHeight)
+      },
+
       send_message (e) {
         e.stopPropagation()
-        this.messages.push(
+        let self = this
+
+        self.messages.push(
           {
             s: this.userName, // 보낸사람
             r: '22', // 받는사람
@@ -26,8 +32,8 @@
             date: ''
           }
         )
-
         e.target.value = ''
+        self.scrollDown()
       }
     },
     data () {
