@@ -23,16 +23,17 @@
       send_message (e) {
         e.stopPropagation()
         let self = this
-
+        let message = e.target.value
         self.messages.push(
           {
             s: this.userName, // 보낸사람
             r: '22', // 받는사람
-            message: e.target.value,
+            message: message,
             date: ''
           }
         )
-        e.target.value = ''
+        this.$socket.emit('testMessage', message)
+        message = ''
         self.scrollDown()
       }
     },
@@ -71,6 +72,18 @@
             date: ''
           }
         ]
+      }
+    },
+    created () {
+      console.log(this.$socket)
+      this.$options.sockets.messageReceive = (data) => {
+        let message = {
+          s: '123',
+          r: 'mung',
+          message: data,
+          date: ''
+        }
+        this.messages.push(message)
       }
     }
   }

@@ -21,11 +21,25 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+var io = require('socket.io')(server);
+io.on('connection', function(client){
+	client.on('testMessage', function(data){
+		// 다른 클라이언트들에게 해당 데이터를 보내준다
+		client.broadcast.emit('messageReceive', data);
+	});
+ 	client.on('event', function(data){});
+ 	client.on('disconnect', function(){});
+});
+
+server.listen(3333, function(){
+	console.log('server on ');
+});
+
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+//server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 

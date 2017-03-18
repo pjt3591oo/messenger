@@ -28,8 +28,8 @@
     created () {
       // 서버로부터 각종 정보를 가져와서 초기화 시키기.
       let self = this
-
-      fetch('http://127.0.0.1:3000/test/data').then(function (response) {
+      console.log('test')
+      fetch('http://127.0.0.1:3333/test/data').then(function (response) {
         return response.json().then(function (data) {
           data['testData'].map(function (item) {
             item['href'] = '/chatroom'

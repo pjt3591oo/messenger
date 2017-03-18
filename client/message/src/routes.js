@@ -5,5 +5,5 @@ export default {
   '/info': 'Infos',
   '/etc': 'Etcs',
   '/chatroom': 'Chatrooms',
-  '/profile/:userName': 'Profiles'
+  '/profile': 'Profiles'
 }
