@@ -35,7 +35,6 @@
   import MainLayout from '../layouts/Main.vue'
   import VItem from '../components/VItem.vue'
   import PProfile from './Profiles.vue'
-
   export default {
     components: {
       MainLayout,
@@ -46,16 +45,14 @@
       return {
         currentView: 'main-layout', // p-profile
         text: '친구',
-
         userName: 'mung',
-        prifilePath: '/profile/' + this.userName,
+        profilePath: '/profile',
         titleShowStatus: true,
-
         myProfile: {
           src: 'http://imvely.com/web/product/medium/201612/11761_shop1_804401.gif',
           name: 'mung',
           content: 'myProfile content',
-          href: '/profile/mung'
+          href: '/profile'
         },
         recommendFriends: [{
           src: 'http://www.stylenanda.com/web/product/small/201703/218538_shop1_311819.gif',
@@ -85,16 +82,15 @@
             name: 'friends1',
             content: 'friends1 content',
             showStatus: true,
-            href: '/profile/friends1'
+            href: '/profile'
           }, {
             src: 'http://www.stylenanda.com/2017/upload1/170224kej_4_11.jpg',
             name: 'friends2',
             content: 'friends2 content',
             showStatus: true,
-            href: '/profile/friends2'
+            href: '/profile'
           }
         ]
-
       }
     },
     methods: {
@@ -106,9 +102,11 @@
       },
       searchFriend (e) {
         let searchName = e.target.value
-
         if (!searchName) {
           this.titleShowStatus = true
+          this.friends.map(function (friend) {
+            friend['showStatus'] = true
+          })
         } else {
           this.titleShowStatus = false
           this.friends.map(function (friend) {
@@ -143,7 +141,6 @@
     width: 100%;
     height: 32px;
   }
-
   .boundary{
     font-size:9px;
     padding: 1px 0 0 10px;
