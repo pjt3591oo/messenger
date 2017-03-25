@@ -22,13 +22,22 @@ app.set('port', port);
 var server = http.createServer(app);
 
 var io = require('socket.io')(server);
+var snakeGamePlayers = [];
+
 io.on('connection', function(client){
 	client.on('testMessage', function(data){
 		// 다른 클라이언트들에게 해당 데이터를 보내준다
 		client.broadcast.emit('messageReceive', data);
 	});
+
+	client.on('connectGame', function(){
+		console.log(snakeGamePlayers);
+		client.broadcast.emit('connectGame', snakeGamePlayers);
+	});
+
 	client.on('createdPlayer', function(createdPlayer){
-		console.log(createdPlayer);
+		snakeGamePlayers.push(createdPlayer);	
+		console.log(snakeGamePlayers);
 		client.broadcast.emit('playerAdd', createdPlayer);
 	});
 	client.on('playerMove', function(play){
