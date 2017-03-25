@@ -27,8 +27,14 @@ io.on('connection', function(client){
 		// 다른 클라이언트들에게 해당 데이터를 보내준다
 		client.broadcast.emit('messageReceive', data);
 	});
- 	client.on('event', function(data){});
- 	client.on('disconnect', function(){});
+	client.on('createdPlayer', function(createdPlayer){
+		console.log(createdPlayer);
+		client.broadcast.emit('playerAdd', createdPlayer);
+	});
+	client.on('playerMove', function(play){
+		console.log(play);
+		io.sockets.emit('move', play);
+	})
 });
 
 server.listen(3333, function(){

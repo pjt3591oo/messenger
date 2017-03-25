@@ -51,7 +51,7 @@
       handleUserAction (key) {
         let newDir = this.KeyPositionMap[key]
 
-        this.maps.move(new Array(newDir), this.playerName)
+        this.$socket.emit('playerMove', {dir: newDir, playName: this.playerName})
       },
 
       getGameBoard () {
@@ -64,6 +64,7 @@
         let playerSnake = new Snake(playName)
         playerSnake.name = playName
 
+        self.$socket.emit('createdPlayer', {playerName: playName, playBody: playerSnake[0]})
         self.maps.addSnake(playerSnake)
       }
     },
@@ -75,6 +76,19 @@
       window.addEventListener('keydown', function (event) {
         self.handleUserAction(event.key)
       })
+
+      this.$options.sockets.playerAdd = (player) => {
+        console.log(player)
+        let newPlayer = new Snake(player.playerName)
+        newPlayer[0] = player.playBody
+        self.maps.addSnake(newPlayer)
+      }
+
+      this.$options.sockets.move = (player) => {
+        console.log(player['dir'])
+        console.log(player['playName'])
+        this.maps.move(new Array(player['dir']), player['playName'])
+      }
     },
 
     created () {
