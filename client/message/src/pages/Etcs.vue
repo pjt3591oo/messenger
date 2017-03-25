@@ -77,15 +77,6 @@
         self.handleUserAction(event.key)
       })
 
-      this.$socket.emit('connectGame')
-      this.$options.sockets.connectGame = (players) => {
-        players.map(function (player) {
-          let newPlayer = new Snake(player.playerName)
-          newPlayer[0] = player.playBody
-          self.maps.addSnake(newPlayer)
-        })
-      }
-
       this.$options.sockets.playerAdd = (player) => {
         console.log(player)
         let newPlayer = new Snake(player.playerName)
@@ -95,10 +86,23 @@
 
       this.$options.sockets.move = (player) => {
         this.maps.move(new Array(player['dir']), player['playName'])
+        console.log(this.maps.snakeNames)
+        let snake = this.maps.snakeNames[player['playName']]
+        let snakeBody = snake[0]
+        this.$socket.emit('bodyChanged', {playerName: self.playerName, playSnakeBody: snakeBody})
       }
     },
 
     created () {
+      let self = this
+      this.$socket.emit('connectGame')
+      this.$options.sockets.connectGame = (players) => {
+        players.map(function (player) {
+          let newPlayer = new Snake(player.playerName)
+          newPlayer[0] = player.playBody
+          self.maps.addSnake(newPlayer)
+        })
+      }
     }
   }
 </script>
