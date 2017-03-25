@@ -31,22 +31,18 @@ io.on('connection', function(client){
 	});
 
 	client.on('connectGame', function(){
-		console.log(snakeGamePlayers);
 		io.sockets.emit('connectGame', snakeGamePlayers);
 	});
 
 	client.on('createdPlayer', function(createdPlayer){
 		snakeGamePlayers.push(createdPlayer);	
-		console.log(snakeGamePlayers);
 		client.broadcast.emit('playerAdd', createdPlayer);
 	});
 
 	client.on('bodyChanged', function(changedBodyPlayer){
 		snakeGamePlayers.map((snakePlayer, index) => {
 			if(changedBodyPlayer['playerName'] == snakePlayer['playerName']){
-				console.log(snakePlayer['playBody'], changedBodyPlayer['playSnakeBody']);
 				snakeGamePlayers[index]['playBody'] = changedBodyPlayer['playSnakeBody']
-				console.log(snakeGamePlayers);
 			}
 		});
 	});
