@@ -10,7 +10,7 @@
 * */
 
 class Snake extends Array{
-  constructor(isAuto){
+  constructor(name){
     super()
     this.dirInfo = {
       up:    [-1, 0],
@@ -19,14 +19,14 @@ class Snake extends Array{
       right: [0, 1]
     }
 
+    this.name = name;
+
     this.nextPosition = this.nextPosition;
     this.searchShortest = this.searchShortest;
 
     this.length = 3;
     this.snakeInit();
-    this.dir = [this.dirInfo['right']];
-
-    this.isAuto = isAuto || false;
+    this.dir = this.dirInfo['right'];
   }
 
   snakeInit(){
@@ -46,8 +46,8 @@ class Snake extends Array{
     let headY = this[0][0][0]
     let headX = this[0][0][1]
 
-    let newHeadY = parseInt(headY) + parseInt(this.dir[0][0])
-    let newHeadX = parseInt(headX) + parseInt(this.dir[0][1])
+    let newHeadY = parseInt(headY) + parseInt(this.dir[0])
+    let newHeadX = parseInt(headX) + parseInt(this.dir[1])
 
     return {
       Y: newHeadY,

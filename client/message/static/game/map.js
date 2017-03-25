@@ -9,13 +9,13 @@ class Map extends Array{
     this.astar = Object();
 
     this.snakes = [];
+    this.snakeNames = {};
 
     this.gameDom = '';
 
     this.width = width;
     this.height = height;
 
-    this.start = this.start;
     this.addSnake = this.addSnake;
     this.move = this.move;
 
@@ -29,8 +29,6 @@ class Map extends Array{
     this.dirCheck = this.dirCheck;
 
     this.mapInfo = this.mapInfo();
-
-    // this.draw()
 
     for(var i=0; i<width; ++i){
       this[i] = []
@@ -72,6 +70,7 @@ class Map extends Array{
     let y = parseInt(Math.random() * 10) * 2 % 15
     let x = parseInt(Math.random() * 10) * 2 % 15
     this[y][x] = 3
+    console.log(this[y][x])
     this.mapChange(y, x, 'eat')
   }
   isRange (y, x) {
@@ -87,7 +86,14 @@ class Map extends Array{
   }
 
   addSnake(snake){
+    let self = this;
     this.snakes.push(snake)
+    this.snakeNames[snake.name] = snake
+
+    snake[0].map(function (body) {
+        self[body[0]][body[1]] = 2
+        self.mapChange(body[0], body[1], 'snake_body')
+    })
   }
 
   start(){
@@ -95,11 +101,11 @@ class Map extends Array{
 
     setInterval(function () {
       self.makeEat()
-    }, 5000)
+    }, 100)
 
     setInterval(function () {
       self.move()
-    }, 500)
+    }, 1000000)
 
     setInterval(function () {
       // self.score += 1
@@ -107,57 +113,35 @@ class Map extends Array{
     }, 1000)
   }
 
-  move(newDir){
+  move(newDir, player){
       let self = this;
 
-      for(var i in this.snakes){
-          let snake = this.snakes[i];
+      let snake = this.snakeNames[player];
 
-          newDir = newDir || snake.dir.slice();
+      if (this.dirCheck(newDir, snake.dir[0])){
+          snake.dir = newDir[0]
+          let nextPos = snake.nextPosition();
 
-          if (this.dirCheck(newDir[0], snake.dir.pop())){
+          if(this.isRange(nextPos.Y, nextPos.X)){
+              snake[0].map(function (body) {
+                  self[body[0]][body[1]] = 1
+                  self.mapChange(body[0], body[1], 'blank')
+              })
 
-              if (!snake.dir.length){
-                  if(snake.isAuto){
-                    console.log('시도')
-                    let map = Array.prototype.slice.call(this);
-                    let shortestEatPosition = snake.searchShortest(map);
-                    let graph = new this.astar.Graph(map)
+              snake[0].unshift([nextPos.Y, nextPos.X])
 
-                    var start = graph.grid[snake[0][0][0]][snake[0][0][1]]
-                    var end = graph.grid[shortestEatPosition[0]][shortestEatPosition[1]]
-                    var result = this.astar.astar.search(graph, start, end);
-
-                  }else{
-                      snake.dir = newDir;
-                  }
-                  snake.dir = newDir;
+              if(!this.isEat(nextPos.Y, nextPos.X)){
+                  snake[0].pop();
               }
 
-              let nextPos = snake.nextPosition();
-
-              if(this.isRange(nextPos.Y, nextPos.X)){
-                  snake[0].map(function (body) {
-                      self[body[0]][body[1]] = 1
-                      self.mapChange(body[0], body[1], 'blank')
-                  })
-                  snake[0].unshift([nextPos.Y, nextPos.X])
-
-                  if(!this.isEat(nextPos.Y, nextPos.X)){
-                      snake[0].pop();
-                  }
-
-                  snake[0].map(function (body) {
-                      self[body[0]][body[1]] = 2
-                      self.mapChange(body[0], body[1], 'snake_body')
-                  })
-              }
+              snake[0].map(function (body) {
+                  self[body[0]][body[1]] = 2
+                  self.mapChange(body[0], body[1], 'snake_body')
+              })
           }
-
-        }
+      }
 
   }
-
 }
 
 export default Map

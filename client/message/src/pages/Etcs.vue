@@ -10,6 +10,8 @@
       </div>
 
       <div class="score_board">
+        <input type="text" value="" v-model:playerName="playerName">
+        <button v-on:click="playerAdd">player 추가</button>
         <p v-bind:score="score">score : {{score}}</p>
         <p v-bind:time="time">time : {{time}}</p>
       </div>
@@ -20,7 +22,6 @@
 
 <script>
   import MainLayout from '../layouts/Main.vue'
-  import Graph from '../../static/game/astar.js'
   import Map from '../../static/game/map.js'
   import Snake from '../../static/game/snake.js'
 
@@ -30,6 +31,7 @@
     },
     data () {
       return {
+        playerName: 'asdf',
         text: 'etc',
         score: 0,
         time: 0,
@@ -49,25 +51,26 @@
       handleUserAction (key) {
         let newDir = this.KeyPositionMap[key]
 
-        this.maps.move(new Array(newDir))
+        this.maps.move(new Array(newDir), this.playerName)
       },
 
       getGameBoard () {
         return document.getElementById('snake_game_map')
+      },
+
+      playerAdd () {
+        let self = this
+        let playName = self.playerName
+        let playerSnake = new Snake(playName)
+        playerSnake.name = playName
+
+        self.maps.addSnake(playerSnake)
       }
     },
 
     mounted () {
       var self = this
       self.maps.gameDom = self.getGameBoard()
-      let playerSnake1 = new Snake(false)
-//      let playerSnake2 = new Snake(false)
-
-      self.maps.addSnake(playerSnake1)
-//      self.maps.addSnake(playerSnake2)
-      self.maps.astar = Graph
-
-      self.maps.start()
 
       window.addEventListener('keydown', function (event) {
         self.handleUserAction(event.key)
